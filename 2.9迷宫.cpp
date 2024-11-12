@@ -4,322 +4,328 @@ using namespace std;
 
 #define MAXSIZE 110
 
-//×ø±ê
-struct postype{
-    int r; //ĞĞ row
-    int c; //ÁĞ col
-};//ÃÔ¹¬ÖĞrĞĞcÁĞµÄÎ»ÖÃ
-struct position{
-    int step; //µ±Ç°Î»ÖÃÔÚÂ·¾¶ÉÏµÄĞòºÅ
-    postype pos; //µ±Ç°µÄ×ø±êÎ»ÖÃ
+//åæ ‡
+struct postype {
+	int r; //è¡Œ row
+	int c; //åˆ— col
+};//è¿·å®«ä¸­rè¡Œcåˆ—çš„ä½ç½®
+struct position {
+	int step; //å½“å‰ä½ç½®åœ¨è·¯å¾„ä¸Šçš„åºå·
+	postype pos; //å½“å‰çš„åæ ‡ä½ç½®
 
 };
-bool operator==(const postype &a,const postype &b){
-    if(a.r==b.r&&a.c==b.c)
-        return true;
-    return false;
+bool operator==(const postype& a, const postype& b) {
+	if (a.r == b.r && a.c == b.c)
+		return true;
+	return false;
 }
-void printPos(postype e){//Êä³ö×ø±ê
-    cout<<"("<<e.r<<","<<e.c<<")"<<endl;
+void printPos(postype e) {//è¾“å‡ºåæ ‡
+	cout << "(" << e.r << "," << e.c << ")" << endl;
 }
-//°Ñ×ø±ê¡¢²½ÊıºÏ³ÉÒ»¸öÕ»½Úµã
-position MakeNode(postype p,int i){
-    position temp;
-    temp.pos=p;
-    temp.step=i;
-    return temp;
+//æŠŠåæ ‡ã€æ­¥æ•°åˆæˆä¸€ä¸ªæ ˆèŠ‚ç‚¹
+position MakeNode(postype p, int i) {
+	position temp;
+	temp.pos = p;
+	temp.step = i;
+	return temp;
 }
-//ºÏ³É×ø±ê
-postype MakePos(int x,int y){
-    postype temp;
-    temp.r=x;
-    temp.c=y;
-    return temp;
+//åˆæˆåæ ‡
+postype MakePos(int x, int y) {
+	postype temp;
+	temp.r = x;
+	temp.c = y;
+	return temp;
 }
-postype MakePosDirect(postype p,int d){
-    postype temp;
-    temp=p;
-    switch(d){
-        case 1:temp.r=p.r-1;break;
-        case 2:temp.c=p.c+1;break;
-        case 3:temp.r=p.r+1;break;
-        case 4:temp.c=p.c-1;break;
-    }
-    return temp;
+postype MakePosDirect(postype p, int d) {
+	postype temp;
+	temp = p;
+	switch (d) {
+	case 1:temp.r = p.r - 1; break;
+	case 2:temp.c = p.c + 1; break;
+	case 3:temp.r = p.r + 1; break;
+	case 4:temp.c = p.c - 1; break;
+	}
+	return temp;
 }
-//Õ»
-class myStack{
+//æ ˆ
+class myStack {
 private:
-    int counter;
-    position *base;
-    position *top;
+	int counter;
+	position* base;
+	position* top;
 public:
-    int stacksize;
-    myStack();   //¹¹Ôìº¯Êı,¹¹Ôì¿ÕÕ»
-    ~myStack(); //Îö¹¹º¯Êı£¬´İ»ÙÕ»
-    void ClearStack(); //ÉèÎª¿ÕÕ»
-    bool StackEmpty();//Õ»ÊÇ·ñÎª¿Õ
-    int StackLength(); //·µ»ØÕ»µÄ³¤¶È
-    bool GetTop(position &e);//ÈôÕ»²»¿Õ£¬ÔòÓÃe·µ»ØÕ»¶¥
-    void Push(position e);//²åÈëeÎªĞÂµÄÕ»¶¥ÔªËØ
-    bool Pop(position &e);//ÈôÕ»²»¿Õ£¬É¾³ıÕ»¶¥ÔªËØ£¬²¢ÓÃe·µ»Ø
-    void StackTraverse(){}
+	int stacksize;
+	myStack();   //æ„é€ å‡½æ•°,æ„é€ ç©ºæ ˆ
+	~myStack(); //ææ„å‡½æ•°ï¼Œæ‘§æ¯æ ˆ
+	void ClearStack(); //è®¾ä¸ºç©ºæ ˆ
+	bool StackEmpty();//æ ˆæ˜¯å¦ä¸ºç©º
+	int StackLength(); //è¿”å›æ ˆçš„é•¿åº¦
+	bool GetTop(position& e);//è‹¥æ ˆä¸ç©ºï¼Œåˆ™ç”¨eè¿”å›æ ˆé¡¶
+	void Push(position e);//æ’å…¥eä¸ºæ–°çš„æ ˆé¡¶å…ƒç´ 
+	bool Pop(position& e);//è‹¥æ ˆä¸ç©ºï¼Œåˆ é™¤æ ˆé¡¶å…ƒç´ ï¼Œå¹¶ç”¨eè¿”å›
+	void StackTraverse() {}
 
 };
-myStack::myStack(){ //¿ÕÕ»
-    counter=0;
-    base=new position[MAXSIZE];
-    top=base;
-    //stacksize=counter;
+myStack::myStack() { //ç©ºæ ˆ
+	counter = 0;
+	base = new position[MAXSIZE];
+	top = base;
+	//stacksize=counter;
 }
-myStack::~myStack(){ //Ïú»ÙÕ»
-    delete [] base;
+myStack::~myStack() { //é”€æ¯æ ˆ
+	delete[] base;
 }
-void myStack::ClearStack(){
-    top=base;
+void myStack::ClearStack() {
+	top = base;
 }
-bool myStack::StackEmpty(){
-    if(top==base)
-        return true;
-    return false;
+bool myStack::StackEmpty() {
+	if (top == base)
+		return true;
+	return false;
 }
-int myStack::StackLength(){
-    return counter;
+int myStack::StackLength() {
+	return counter;
 }
-bool myStack::GetTop(position &e){
-    if(top==base)
-        return false;
-    e=*(top-1);
-    return true;
+bool myStack::GetTop(position& e) {
+	if (top == base)
+		return false;
+	e = *(top - 1);
+	return true;
 }
-void myStack::Push(position e){
-    *(top++)=e;
-    counter++;
+void myStack::Push(position e) {
+	*(top++) = e;
+	counter++;
 }
-bool myStack::Pop(position &e){
-    if(top==base)
-        return false;
-    e=*--top;
-    counter--;
-    return true;
+bool myStack::Pop(position& e) {
+	if (top == base)
+		return false;
+	e = *--top;
+	counter--;
+	return true;
 }
 
-//ÃÔ¹¬
-struct MazePoint{//ÃÔ¹¬Ã¿¸ö·½¿éµÄÊôĞÔ
-    int cross; //ÊÇ·ñ¿ÉÍ¨£¬0Í¨1²»Í¨
-    int foot; //ÊÇ·ñÓĞ×ã¼££¬0ÎŞ1ÓĞ
-    int mark; //Ä¬ÈÏÎª0£¬1±íÊ¾ÎªÂ·¾¶£¬2±íÊ¾ËÀÂ·£¬ÔÚÍË¸ñÊ±±ê¼Ç
-    postype mpos;//ÃÔ¹¬¸Ãµã×ø±ê
-    char print; //´òÓ¡Ê±µÄ×Ö·û
+//è¿·å®«
+struct MazePoint {//è¿·å®«æ¯ä¸ªæ–¹å—çš„å±æ€§
+	int cross; //æ˜¯å¦å¯é€šï¼Œ0é€š1ä¸é€š
+	int foot; //æ˜¯å¦æœ‰è¶³è¿¹ï¼Œ0æ— 1æœ‰
+	int mark; //é»˜è®¤ä¸º0ï¼Œ1è¡¨ç¤ºä¸ºè·¯å¾„ï¼Œ2è¡¨ç¤ºæ­»è·¯ï¼Œåœ¨é€€æ ¼æ—¶æ ‡è®°
+	postype mpos;//è¿·å®«è¯¥ç‚¹åæ ‡
+	char print; //æ‰“å°æ—¶çš„å­—ç¬¦
 };
-class Maze{
+class Maze {
 private:
 
-    int row; //ĞĞÊı
-    int col;//ÁĞÊı
-    postype start;//Èë¿Ú
-    postype mend;//³ö¿Ú
+	int row; //è¡Œæ•°
+	int col;//åˆ—æ•°
+	postype start;//å…¥å£
+	postype mend;//å‡ºå£
 public:
-    MazePoint point[11][11]; //×î´óÓĞ100¸ö·½¿é
-    Maze();//¹¹Ôìº¯Êı
-    Maze(int x,int y,postype op,postype ed);//ĞĞÊı¡¢ÁĞÊı¡¢Èë¿Ú¡¢³ö¿Ú
-    ~Maze();//Îö¹¹º¯Êı
-    int getrow();//»ñµÃĞĞÊı
-    int getcol();//»ñµÃÁĞÊı
-    void InitMaze();//ÒÔÓÃ»§ÊäÈë¹¹½¨ÃÔ¹¬
-    bool MazePath();//Çó½âÃÔ¹¬£¬¿É½âÎªtrue£¬²»¿É½âÎªfalse
-    void PrintMaze();//´òÓ¡ÃÔ¹¬
-    void SetStart(int x,int y);//ÖØÉèÈë¿Ú
-    void SetEnd(int x,int y);//ÖØÉè³ö¿Ú
-    void CheckMaze();//¼ì²éµ±Ç°ÃÔ¹¬Ã¿µãÊôĞÔ£¬¹æ·¶»¯
-    bool NextStep(position nowstep,int dir,position &e); //²úÉúÏÂÒ»²½
+	MazePoint point[11][11]; //æœ€å¤§æœ‰100ä¸ªæ–¹å—
+	Maze();//æ„é€ å‡½æ•°
+	Maze(int x, int y, postype op, postype ed);//è¡Œæ•°ã€åˆ—æ•°ã€å…¥å£ã€å‡ºå£
+	~Maze();//ææ„å‡½æ•°
+	int getrow();//è·å¾—è¡Œæ•°
+	int getcol();//è·å¾—åˆ—æ•°
+	void InitMaze();//ä»¥ç”¨æˆ·è¾“å…¥æ„å»ºè¿·å®«
+	bool MazePath();//æ±‚è§£è¿·å®«ï¼Œå¯è§£ä¸ºtrueï¼Œä¸å¯è§£ä¸ºfalse
+	void PrintMaze();//æ‰“å°è¿·å®«
+	void SetStart(int x, int y);//é‡è®¾å…¥å£
+	void SetEnd(int x, int y);//é‡è®¾å‡ºå£
+	void CheckMaze();//æ£€æŸ¥å½“å‰è¿·å®«æ¯ç‚¹å±æ€§ï¼Œè§„èŒƒåŒ–
+	bool NextStep(position nowstep, int dir, position& e); //äº§ç”Ÿä¸‹ä¸€æ­¥
 };
 
-Maze::Maze(){
-    row=10;
-    col=10;
-    start=MakePos(0,0);
-    mend=MakePos(0,0);
-    for(int i=1;i<=row;i++){
-        for(int j=1;j<=col;j++){
-            point[i][j].cross=1;
-            point[i][j].foot=0;
-            point[i][j].mark=0;
-            point[i][j].mpos=MakePos(i,j);
-            point[i][j].print='#';
-        }
-    }
+Maze::Maze() {
+	row = 10;
+	col = 10;
+	start = MakePos(0, 0);
+	mend = MakePos(0, 0);
+	for (int i = 1; i <= row; i++) {
+		for (int j = 1; j <= col; j++) {
+			point[i][j].cross = 1;
+			point[i][j].foot = 0;
+			point[i][j].mark = 0;
+			point[i][j].mpos = MakePos(i, j);
+			point[i][j].print = '#';
+		}
+	}
 }
-Maze::Maze(int x,int y,postype op,postype ed){
-    row=x;
-    col=y;
-    start=op;
-    mend=ed;
-    for(int i=1;i<=row;i++){
-        for(int j=1;j<=col;j++){
-            point[i][j].cross=1;
-            point[i][j].foot=0;
-            point[i][j].mark=0;
-            point[i][j].mpos=MakePos(i,j);
-            point[i][j].print='#';
-        }
-    }
+Maze::Maze(int x, int y, postype op, postype ed) {
+	row = x;
+	col = y;
+	start = op;
+	mend = ed;
+	for (int i = 1; i <= row; i++) {
+		for (int j = 1; j <= col; j++) {
+			point[i][j].cross = 1;
+			point[i][j].foot = 0;
+			point[i][j].mark = 0;
+			point[i][j].mpos = MakePos(i, j);
+			point[i][j].print = '#';
+		}
+	}
 }
-Maze::~Maze(){
-    cout<<"Maze destroyed"<<endl;
+Maze::~Maze() {
+	cout << "Maze destroyed" << endl;
 }
-int Maze::getcol(){
-    return col;
+int Maze::getcol() {
+	return col;
 }
-int Maze::getrow(){
-    return row;
+int Maze::getrow() {
+	return row;
 }
-void Maze::SetEnd(int x,int y){
-    start=MakePos(x,y);
+void Maze::SetEnd(int x, int y) {
+	start = MakePos(x, y);
 }
-void Maze::SetStart(int x,int y){
-    mend=MakePos(x,y);
+void Maze::SetStart(int x, int y) {
+	mend = MakePos(x, y);
 }
-void Maze::InitMaze(){ //ÓÉÓÃ»§ÊäÈë¡£
-    cout<<"ÇëÊäÈëÃÔ¹¬:"<<endl;
-    for(int i=1;i<=row;i++){
-        for(int j=1;j<=col;j++){
-            cin>>point[i][j].cross;
-        }
-    }
-    cout<<endl;
+void Maze::InitMaze() { //ç”±ç”¨æˆ·è¾“å…¥ã€‚
+	cout << "è¯·è¾“å…¥è¿·å®«:" << endl;
+	for (int i = 1; i <= row; i++) {
+		for (int j = 1; j <= col; j++) {
+			cin >> point[i][j].cross;
+		}
+	}
+	cout << endl;
 }
-void Maze::CheckMaze(){
-    for(int i=1;i<=row;i++){
-        for(int j=1;j<=col;j++){
-            if(point[i][j].cross==0){
-                if(point[i][j].mark==1){
-                    point[i][j].print='*';
-                }else if(point[i][j].mark==2){
-                    point[i][j].print='@';
-                }else{
-                    point[i][j].print=' ';
-                }
-            }
-        }
-    }
+void Maze::CheckMaze() {
+	for (int i = 1; i <= row; i++) {
+		for (int j = 1; j <= col; j++) {
+			if (point[i][j].cross == 0) {
+				if (point[i][j].mark == 1) {
+					point[i][j].print = '*';
+				}
+				else if (point[i][j].mark == 2) {
+					point[i][j].print = '@';
+				}
+				else {
+					point[i][j].print = ' ';
+				}
+			}
+		}
+	}
+	point[start.r][start.c].print = 'E';
+	point[mend.r][mend.c].print = 'O';
+}
+void Maze::PrintMaze() {
+	for (int i = 1; i <= col * 2.7; i++) {
+		cout << '-';
+	}
+	cout << endl;
+	for (int i = 1; i <= row; i++) {
+		cout << '|';
+		for (int j = 1; j <= col; j++) {
+			if (j != 1)
+				cout << " ";
+			cout << point[i][j].print;
+			cout << '|';
+		}
+		cout << endl;
+		for (int i = 1; i <= col * 2.7; i++) {
+			cout << '-';
+		}
+		cout << endl;
+	}
+	cout << endl;
+	cout << endl;
 
 }
-void Maze::PrintMaze(){
-    for(int i=1;i<=col*2.7;i++){
-        cout<<'-';
-    }
-    cout<<endl;
-    for(int i=1;i<=row;i++){
-        cout<<'|';
-        for(int j=1;j<=col;j++){
-            if(j!=1)
-                cout<<" ";
-            cout<<point[i][j].print;
-            cout<<'|';
-        }
-        cout<<endl;
-        for(int i=1;i<=col*2.7;i++){
-            cout<<'-';
-        }
-        cout<<endl;
-    }
-    cout<<endl;
-    cout<<endl;
-
+bool Maze::NextStep(position np, int d, position& e) { //å½“å‰æ­¥ï¼Œæ–¹å‘ï¼Œä¸‹ä¸€æ­¥
+	e = np;
+	postype temp = MakePosDirect(np.pos, d);
+	//å¦‚æœå‡ºç•Œ
+	if (temp.r > row || temp.r<1 || temp.c>col || temp.c < 1) {
+		return false;
+	}
+	//å¦‚æœä¸å¯é€š
+	else if (point[temp.r][temp.c].cross != 0) {
+		return false;
+	}
+	//å¦‚æœå·²èµ°è¿‡
+	else if (point[temp.r][temp.c].foot != 0)
+		return false;
+	else {
+		e.pos = temp;
+		e.step++;
+		return true;
+	}
 }
-bool Maze::NextStep(position np,int d,position &e){ //µ±Ç°²½£¬·½Ïò£¬ÏÂÒ»²½
-    e=np;
-    postype temp=MakePosDirect(np.pos,d);
-    //Èç¹û³ö½ç
-    if(temp.r>row||temp.r<1||temp.c>col||temp.c<1){
-        return false;
-    }
-    //Èç¹û²»¿ÉÍ¨
-    else if(point[temp.r][temp.c].cross!=0){
-        return false;
-    }
-    //Èç¹ûÒÑ×ß¹ı
-    else if(point[temp.r][temp.c].foot!=0)
-        return false;
-    else{
-        e.pos=temp;
-        e.step++;
-        return true;
-    }
-}
-bool Maze::MazePath(){
-    myStack path;
-    position nowstep; //µ±Ç°²½
-    nowstep.step=0;
-    int direct=1; //·½Ïò£¬1ÉÏ£¬2ÓÒ£¬3ÏÂ£¬4×ó
-    nowstep.pos=start;
-    nowstep.step=1;
-    path.Push(nowstep);
-    int ssss=1;
-    while(!path.StackEmpty()){
+bool Maze::MazePath() {
+	myStack path;
+	position nowstep; //å½“å‰æ­¥
+	nowstep.step = 0;
+	int direct = 1; //æ–¹å‘ï¼Œ1ä¸Šï¼Œ2å³ï¼Œ3ä¸‹ï¼Œ4å·¦
+	nowstep.pos = start;
+	nowstep.step = 1;
+	path.Push(nowstep);
+	int ssss = 1;
+	while (!path.StackEmpty()) {
 
-        direct=1;
-        if(path.GetTop(nowstep)){
-            direct=1;
-        }
-        if(nowstep.pos==mend){
-            point[nowstep.pos.r][nowstep.pos.c].foot=1;
-            point[nowstep.pos.r][nowstep.pos.c].mark=1;
-            return true;
-        }else{
-            point[nowstep.pos.r][nowstep.pos.c].foot=1;
-            point[nowstep.pos.r][nowstep.pos.c].mark=1;
-            while(direct<=4){
-                if(NextStep(nowstep,direct,nowstep)){
-                    path.Push(nowstep);
-                    break;
-                }else{
-                    direct++;
-                }
-            }
-            if(direct>=5){
-                point[nowstep.pos.r][nowstep.pos.c].mark=2;
-                if(path.Pop(nowstep)){
-                    direct=6;
-                }
+		direct = 1;
+		if (path.GetTop(nowstep)) {
+			direct = 1;
+		}
+		if (nowstep.pos == mend) {
+			point[nowstep.pos.r][nowstep.pos.c].foot = 1;
+			point[nowstep.pos.r][nowstep.pos.c].mark = 1;
+			return true;
+		}
+		else {
+			point[nowstep.pos.r][nowstep.pos.c].foot = 1;
+			point[nowstep.pos.r][nowstep.pos.c].mark = 1;
+			while (direct <= 4) {
+				if (NextStep(nowstep, direct, nowstep)) {
+					path.Push(nowstep);
+					break;
+				}
+				else {
+					direct++;
+				}
+			}
+			if (direct >= 5) {
+				point[nowstep.pos.r][nowstep.pos.c].mark = 2;
+				if (path.Pop(nowstep)) {
+					direct = 6;
+				}
 
-            }
-        }
-    }
-    return false;
+			}
+		}
+	}
+	return false;
 }
 
-int main(){
-    //Maze one(9,8,MakePos(1,1),MakePos(9,8));
+int main() {
+	//Maze one(9,8,MakePos(1,1),MakePos(9,8));
 
-    int row,col,start_x,start_y,end_x,end_y;
-    cout<<"ÇëÒÀ´ÎÊäÈëÃÔ¹¬µÄĞĞÊı¡¢ÁĞÊı"<<endl;
-    cin>>row>>col;
-    cout<<endl;
-    cout<<"ÇëÒÀ´ÎÊäÈëÃÔ¹¬µÄÈë¿Úºá×ø±ê£¬×İ×ø±ê"<<endl;
-    cin>>start_x>>start_y;
-    cout<<endl;
-    cout<<"ÇëÒÀ´ÎÊäÈëÃÔ¹¬µÄ³ö¿Úºá×ø±ê£¬×İ×ø±ê"<<endl;
-    cin>>end_x>>end_y;
-    cout<<endl;
-    Maze one(row,col,MakePos(start_x,start_y),MakePos(end_x,end_y));
-    one.InitMaze();
-    cout<<"ÊäÈëÃÔ¹¬Îª:"<<endl;
-    one.CheckMaze();
-    one.PrintMaze();
-    cout<<"¿ªÊ¼Ñ°ÕÒÂ·¾¶:"<<endl;
-    system("pause");
-    cout<<endl;
-    if(one.MazePath()){
-        cout<<"ÕÒµ½¿ÉĞĞÂ·¾¶"<<endl;
-        cout<<"ÃÔ¹¬»æÖÆÈçÏÂ:"<<endl;
-        one.CheckMaze();
-        one.PrintMaze();
-    }else{
-        cout<<"¸ÃÃÔ¹¬ÎŞ½â"<<endl;
-    }
-    system("pause");
-    return 0;
+	int row, col, start_x, start_y, end_x, end_y;
+	cout << "è¯·ä¾æ¬¡è¾“å…¥è¿·å®«çš„è¡Œæ•°ã€åˆ—æ•°" << endl;
+	cin >> row >> col;
+	cout << endl;
+	cout << "è¯·ä¾æ¬¡è¾“å…¥è¿·å®«çš„å…¥å£æ¨ªåæ ‡ï¼Œçºµåæ ‡" << endl;
+	cin >> start_x >> start_y;
+	cout << endl;
+	cout << "è¯·ä¾æ¬¡è¾“å…¥è¿·å®«çš„å‡ºå£æ¨ªåæ ‡ï¼Œçºµåæ ‡" << endl;
+	cin >> end_x >> end_y;
+	cout << endl;
+	Maze one(row, col, MakePos(start_x, start_y), MakePos(end_x, end_y));
+	one.InitMaze();
+	cout << "è¾“å…¥è¿·å®«ä¸º:" << endl;
+	one.CheckMaze();
+	one.PrintMaze();
+	cout << "å¼€å§‹å¯»æ‰¾è·¯å¾„:" << endl;
+	system("pause");
+	cout << endl;
+	if (one.MazePath()) {
+		cout << "æ‰¾åˆ°å¯è¡Œè·¯å¾„" << endl;
+		cout << "è¿·å®«ç»˜åˆ¶å¦‚ä¸‹:" << endl;
+		one.CheckMaze();
+		one.PrintMaze();
+	}
+	else {
+		cout << "è¯¥è¿·å®«æ— è§£" << endl;
+	}
+	system("pause");
+	return 0;
 
 }
